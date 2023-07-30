@@ -15,6 +15,7 @@ Before using ScreenOCR, follow these setup steps:
 pip install --upgrade google-cloud-vision
 pip install python-dotenv
 pip install Desktopmagic
+pip install keyboard
 ```
 
 ## How ScreenOCR Works

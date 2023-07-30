@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from google.cloud import vision
 from desktopmagic.screengrab_win32 import getRectAsImage
+import keyboard
+import clipboard
 
 # Load environment variables from .env file
 load_dotenv()
@@ -42,10 +44,21 @@ def run_quickstart() -> str:
     return original_text
 
 def main():
-    original_text = run_quickstart()
-    #print("Detected Text:")
-    print(original_text)
+    print("Press 'F8' to perform OCR and display the result. Press 'Esc' to exit.")
+    while True:
+        if keyboard.is_pressed("F8"):
+            original_text = run_quickstart()
+            print("Detected Text:")
+            print(original_text)
 
+            # Set the detected text to the clipboard
+            clipboard.copy(original_text)
+
+            # Add a slight delay to avoid multiple OCR executions for a single key press
+            keyboard.wait("F8", suppress=True)
+        elif keyboard.is_pressed("Esc"):
+            print("Exiting...")
+            break
 
 if __name__ == "__main__":
     main()

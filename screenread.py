@@ -1,28 +1,27 @@
 import os
 from dotenv import load_dotenv
 from google.cloud import vision
-from PIL import ImageGrab
+from desktopmagic.screengrab_win32 import getRectAsImage
 
 # Load environment variables from .env file
 load_dotenv()
 
-def run_quickstart() -> vision.EntityAnnotation:
+def run_quickstart() -> str:
     """Provides a quick start example for Cloud Vision."""
 
     # Instantiates a client
     client = vision.ImageAnnotatorClient()
 
     # Take a screenshot of a specific area on the screen
-    # Set the coordinates (left, top, right, bottom) of the area to capture
-    area = (30,30,215,151) # area = (left, top, right, bottom) in terms of coordinates
-    screenshot = ImageGrab.grab(bbox=area)
+    area_standard_left_monitor = (-557, 94, -9, 270)
+    screenshot = getRectAsImage(area_standard_left_monitor)
 
-    # Convert the screenshot to bytes
-    with open("screenshot.png", "wb") as f:
-        screenshot.save(f)
-    
+    # Save the screenshot to a file (temporary step)
+    screenshot_path = "screenshot.png"
+    screenshot.save(screenshot_path)
+
     # Read the screenshot from the local file
-    with open("screenshot.png", "rb") as f:
+    with open(screenshot_path, "rb") as f:
         content = f.read()
 
     # Create a Vision API image from the screenshot bytes
@@ -30,20 +29,22 @@ def run_quickstart() -> vision.EntityAnnotation:
 
     # Performs OCR (text detection) on the image
     response = client.text_detection(image=image)
-    annotations = response.text_annotations
 
-    return annotations
+    # Get the full_text_annotation from the response
+    full_text_annotation = response.full_text_annotation
+
+    # Extract and return the original text
+    original_text = full_text_annotation.text
+
+    # Delete the temporary screenshot file
+    os.remove(screenshot_path)
+
+    return original_text
 
 def main():
-    annotations = run_quickstart()
-    # print("Detected Text:")
-    for annotation in annotations:
-        print(annotation.description)
-
-    # Optional: If you want to display the screenshot
-    # ImageGrab.grab() captures the area defined in the run_quickstart() function.
-    # The screenshot will be displayed using the default image viewer.
-    # ImageGrab.grab(bbox=area).show()
+    original_text = run_quickstart()
+    #print("Detected Text:")
+    print(original_text)
 
 
 if __name__ == "__main__":

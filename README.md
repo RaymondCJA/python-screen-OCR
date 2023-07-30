@@ -21,6 +21,7 @@ pip install keyboard
 ## How ScreenOCR Works
 
 ScreenOCR takes a screenshot of a specified area on the screen (e.g., closed captions displayed in a video or livestream) and sends the captured image to the Google Cloud Vision API for OCR processing. The resulting text annotations are then extracted and presented in a format that can be easily copied and pasted for further use.
+ScreenOCR also listens for a specific key press (default: F8) to trigger the OCR process. When the key is pressed, it captures the specified area on the screen using Desktopmagic, sends the image to the Google Cloud Vision API for OCR processing, and copies the detected text to the clipboard. You can then paste the detected text into other applications.
 
 ## Getting Started
 
@@ -43,6 +44,14 @@ GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/keyfile.json
 ```
 python screenread.py
 ```
+
+4. Run functionality: Press the configured key (default: F8) to trigger OCR and copy the detected text to the clipboard, as well as to generate it on the console:
+
+## Customization
+You can customize the behavior of ScreenOCR by changing the following parameters in screenread.py:
+
+area_standard_left_monitor: Adjust the coordinates to capture a different area on the screen.
+keyboard.is_pressed("F8"): Change the key to trigger the OCR process. Replace "F8" with the desired key name.
 
 ## Contributing
 
